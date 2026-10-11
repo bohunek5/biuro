@@ -22,11 +22,11 @@
     <button id="submit" type="submit">Otwórz podgląd</button>
     <p id="error" role="alert" aria-live="polite"></p>
   </form>
-  <p class="note">Podgląd demonstracyjny bez firmowej bazy klientów. Zadania można przetestować w tej karcie; zmiany znikają po odświeżeniu. Nie wpisuj prawdziwych danych.</p>
+  <p class="note">Podgląd zawiera listę B2B z Excela i dane do ćwiczeń. Zapamiętuje ustawienie widoku na tym urządzeniu. Wpisane wyniki i zmiany zadań pozostają w bieżącej karcie.</p>
   <footer>Zawartość podglądu jest zaszyfrowana.</footer>
 </main>
 <script>
-  const config={"salt":"ze6CgJO4rETjbW2+NRvEZw==","iv":"O7N7k+CWjb257KOZ","iterations":600000,"payload":"office.enc"};
+  const config={"salt":"frpTnrUAzn6Rk6WsOqjiaw==","iv":"PrwCTspmJjrRITut","iterations":600000,"payload":"office.enc"};
   const form=document.getElementById('unlock'),field=document.getElementById('password'),button=document.getElementById('submit'),error=document.getElementById('error');
   const bytes=text=>Uint8Array.from(atob(text),char=>char.charCodeAt(0));
   form.addEventListener('submit',async event=>{
@@ -42,7 +42,7 @@
       const packed=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(config.iv)},key,encrypted);phase='content';
       const stream=new Blob([packed]).stream().pipeThrough(new DecompressionStream('gzip'));
       const html=await new Response(stream).text();
-      // No password, key or decrypted data is written to browser storage.
+      // Credentials and decrypted records stay in memory. The app stores display preferences only.
       document.open();document.write(html);document.close();
     }catch(exception){
       field.value='';button.disabled=false;button.textContent='Otwórz podgląd';
